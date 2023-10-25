@@ -15,7 +15,16 @@ document.addEventListener("DOMContentLoaded", function () {
             },
             body: JSON.stringify({ type, description, files }),
         })
-            .then((response) => response.json())
+            .then(response => response.text())
+            .then(text => {
+                try {
+                    return JSON.parse(text);
+                } catch {
+                    console.error("Invalid JSON:", text);
+                    throw new Error("Invalid JSON");
+                }
+            })
+
             .then((data) => {
                 const resultDiv = document.getElementById("result");
                 resultDiv.innerHTML = `<strong>Generated Commit Message:</strong> ${data.commit_message}`;
